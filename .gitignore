@@ -1,0 +1,4 @@
+/target
+./.idea
+./configuration/local.yaml
+./configuration/production.yaml
