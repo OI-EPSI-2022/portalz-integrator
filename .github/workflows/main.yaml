@@ -7,6 +7,7 @@ on:
     branches: [main, develop]
 
 jobs:
+  name: Test and build project
   build-and-test:
     name: Rust project
     runs-on: ubuntu-latest
@@ -21,6 +22,7 @@ jobs:
           args: --release --all-features
 
   docker:
+    name: Build and Push image to registry
     env:
       IMAGE: portalz-registry-dev/portalz-integrator
     runs-on: ubuntu-latest
@@ -53,7 +55,7 @@ jobs:
             ${{ steps.prep.outputs.BUILD_ID }}
 
   deploy:
-    name: SSH
+    name: Deploy on Kubernetes via SSH
     runs-on: ubuntu-latest
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
     needs: [ build-and-test, docker ]
