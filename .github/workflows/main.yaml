@@ -62,7 +62,7 @@ jobs:
     name: SSH
     runs-on: ubuntu-latest
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
-    needs: [ build-and-test, docker-prod ]
+    needs: [ build-and-test, docker ]
     steps:
       - name: Deploy image to Kubernetes cluster via SSH
         uses: fifsky/ssh-action@master
