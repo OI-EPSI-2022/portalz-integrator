@@ -7,9 +7,8 @@ on:
     branches: [main, develop]
 
 jobs:
-  name: Test and build project
   build-and-test:
-    name: Rust project
+    name: Test and build project
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
