@@ -26,7 +26,7 @@ jobs:
   docker:
     name: Build and Push image to registry
     env:
-      IMAGE: portalz-registry-dev/${{ env.APPLICATION_NAME }}
+      IMAGE: portalz-registry-dev/${APPLICATION_NAME}
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
@@ -34,6 +34,10 @@ jobs:
       - name: Prepare
         id: prep
         run: |
+          echo "APPLICATION_NAME=$(echo $APPLICATION_NAME)" >> $GITHUB_ENV
+          echo "IMAGE_NAME=$(echo portalz-registry-dev/$APPLICATION_NAME)" >> $GITHUB_ENV
+          APPLICATION_NAME=$(echo $APPLICATION_NAME)
+          IMAGE_NAME=$(echo portalz-registry-dev/$APPLICATION_NAME)
           BRANCH=${GITHUB_REF##*/}
           TS=$(date +%s)
           REVISION=${GITHUB_SHA::8}
@@ -43,6 +47,8 @@ jobs:
             BUILD_ID=${GITHUB_REF/refs\/tags\//}
             LATEST_ID=latest
           fi
+          echo ::set-output name=APPLICATION_NAME::${APPLICATION_NAME}
+          echo ::set-output name=IMAGE_NAME::${IMAGE_NAME}
           echo ::set-output name=BUILD_DATE::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
           echo ::set-output name=BUILD_ID::${BUILD_ID}
           echo ::set-output name=LATEST_ID::${LATEST_ID}
@@ -50,7 +56,7 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@v4
         with:
           registry: ${{ secrets.REGISTRY_URI }}
-          name: ${{ env.IMAGE }}
+          name: ${{ env.IMAGE_NAME }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
           tags: |
@@ -68,8 +74,8 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           command: |
-            kubectl delete deployment ${{ env.APPLICATION_NAME }}
-            kubectl create deployment ${{ env.APPLICATION_NAME }} --image=rg.fr-par.scw.cloud/portalz-registry-dev/${{ env.APPLICATION_NAME }}:latest
+            kubectl delete deployment ${APPLICATION_NAME}
+            kubectl create deployment ${APPLICATION_NAME} --image=rg.fr-par.scw.cloud/portalz-registry-dev/${APPLICATION_NAME}:latest
           host: ${{ secrets.SSH_HOST }}
           user: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY}}
