@@ -26,7 +26,7 @@ jobs:
   docker:
     name: Build and Push image to registry
     env:
-      IMAGE: portalz-registry-dev/${env.APPLICATION_NAME}
+      IMAGE: portalz-registry-dev/${{ env.APPLICATION_NAME }}
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
@@ -62,12 +62,14 @@ jobs:
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
     needs: [ build-and-test, docker ]
     steps:
+      - name: Set environment variables
+        run: echo "APPLICATION_NAME=$(echo $APPLICATION_NAME)" >> $GITHUB_ENV
       - name: Deploy image to Kubernetes cluster via SSH
         uses: fifsky/ssh-action@master
         with:
           command: |
-            kubectl delete deployment ${env.APPLICATION_NAME}
-            kubectl create deployment ${env.APPLICATION_NAME} --image=rg.fr-par.scw.cloud/portalz-registry-dev/${env.APPLICATION_NAME}:latest
+            kubectl delete deployment ${{ env.APPLICATION_NAME }}
+            kubectl create deployment ${{ env.APPLICATION_NAME }} --image=rg.fr-par.scw.cloud/portalz-registry-dev/${{ env.APPLICATION_NAME }}:latest
           host: ${{ secrets.SSH_HOST }}
           user: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY}}
