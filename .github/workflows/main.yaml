@@ -26,7 +26,7 @@ jobs:
   docker:
     name: Build and Push image to registry
     env:
-      IMAGE: portalz-registry-dev/${{ APPLICATION_NAME }}
+      IMAGE: portalz-registry-dev/$APPLICATION_NAME
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
@@ -66,8 +66,8 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           command: |
-            kubectl delete deployment ${{ APPLICATION_NAME }}
-            kubectl create deployment ${{ APPLICATION_NAME }} --image=rg.fr-par.scw.cloud/portalz-registry-dev/${{ APPLICATION_NAME }}:latest
+            kubectl delete deployment $APPLICATION_NAME
+            kubectl create deployment $APPLICATION_NAME --image=rg.fr-par.scw.cloud/portalz-registry-dev/$APPLICATION_NAME:latest
           host: ${{ secrets.SSH_HOST }}
           user: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY}}
