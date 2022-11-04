@@ -23,4 +23,4 @@ COPY --from=builder /app/target/release/portalz-integrator api
 COPY configuration configuration
 ENV APP_ENVIRONMENT production
 ENV RUST_LOG info
-ENTRYPOINT ["./api"]
+ENTRYPOINT ["./portalz-integrator"]

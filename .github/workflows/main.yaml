@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main, develop]
 
+env:
+  APPLICATION_NAME: portalz-integrator
+
 jobs:
   build-and-test:
     name: Test and build project
@@ -23,7 +26,7 @@ jobs:
   docker:
     name: Build and Push image to registry
     env:
-      IMAGE: portalz-registry-dev/portalz-integrator
+      IMAGE: portalz-registry-dev/${{ env.APPLICATION_NAME }}
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
@@ -63,8 +66,8 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           command: |
-            kubectl delete deployment portalz-integrator
-            kubectl create deployment portalz-integrator --image=rg.fr-par.scw.cloud/portalz-registry-dev/portalz-integrator:latest
+            kubectl delete deployment ${{ env.APPLICATION_NAME }}
+            kubectl create deployment ${{ env.APPLICATION_NAME }} --image=rg.fr-par.scw.cloud/portalz-registry-dev/${{ env.APPLICATION_NAME }}:latest
           host: ${{ secrets.SSH_HOST }}
           user: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY}}
