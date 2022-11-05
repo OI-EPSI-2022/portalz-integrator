@@ -74,8 +74,8 @@ jobs:
         uses: fifsky/ssh-action@master
         with:
           command: |
-            kubectl delete deployment ${APPLICATION_NAME}
-            kubectl create deployment ${APPLICATION_NAME} --image=rg.fr-par.scw.cloud/portalz-registry-dev/${APPLICATION_NAME}:latest
+            echo "kubectl delete deployment $(echo $APPLICATION_NAME)"
+            echo "kubectl create deployment $(echo $APPLICATION_NAME) --image=rg.fr-par.scw.cloud/portalz-registry-dev/$(echo $APPLICATION_NAME):latest"
           host: ${{ secrets.SSH_HOST }}
           user: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY}}
