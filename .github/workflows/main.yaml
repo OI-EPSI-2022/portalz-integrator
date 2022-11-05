@@ -71,13 +71,13 @@ jobs:
       - name: Set environment variables
         run: |
           echo "APPLICATION_NAME=$(echo $APPLICATION_NAME)" >> $GITHUB_ENV
-          echo ::set-output name=APPLICATION_NAME::${APPLICATION_NAME}
       - name: Deploy image to Kubernetes cluster via SSH
-        uses: fifsky/ssh-action@master
+        uses: appleboy/ssh-action@master
         with:
-          command: |
-            kubectl delete deployment $(echo $APPLICATION_NAME)
-            kubectl create deployment $(echo $APPLICATION_NAME) --image=rg.fr-par.scw.cloud/portalz-registry-dev/$(echo $APPLICATION_NAME):latest
           host: ${{ secrets.SSH_HOST }}
-          user: ${{ secrets.SSH_USER }}
+          username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY}}
+          export_all_envs: true
+          script: |
+            kubectl delete deployment $APPLICATION_NAME
+            kubectl create deployment $APPLICATION_NAME --image=rg.fr-par.scw.cloud/portalz-registry-dev/$APPLICATION_NAME:latest
