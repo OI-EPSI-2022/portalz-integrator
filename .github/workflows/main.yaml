@@ -77,7 +77,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY}}
-          export_all_envs: true
+          envs: APPLICATION_NAME
           script: |
             kubectl delete deployment $APPLICATION_NAME
             kubectl create deployment $APPLICATION_NAME --image=rg.fr-par.scw.cloud/portalz-registry-dev/$APPLICATION_NAME:latest
