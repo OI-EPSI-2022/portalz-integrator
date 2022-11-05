@@ -69,13 +69,15 @@ jobs:
     needs: [ build-and-test, docker ]
     steps:
       - name: Set environment variables
-        run: echo "APPLICATION_NAME=$(echo $APPLICATION_NAME)" >> $GITHUB_ENV
+        run: |
+          echo "APPLICATION_NAME=$(echo $APPLICATION_NAME)" >> $GITHUB_ENV
+          echo ::set-output name=APPLICATION_NAME::${APPLICATION_NAME}
       - name: Deploy image to Kubernetes cluster via SSH
         uses: fifsky/ssh-action@master
         with:
           command: |
-            echo "kubectl delete deployment $(echo $APPLICATION_NAME)"
-            echo "kubectl create deployment $(echo $APPLICATION_NAME) --image=rg.fr-par.scw.cloud/portalz-registry-dev/$(echo $APPLICATION_NAME):latest"
+            kubectl delete deployment $(echo $APPLICATION_NAME)
+            kubectl create deployment $(echo $APPLICATION_NAME) --image=rg.fr-par.scw.cloud/portalz-registry-dev/$(echo $APPLICATION_NAME):latest
           host: ${{ secrets.SSH_HOST }}
           user: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY}}
