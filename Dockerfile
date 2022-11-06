@@ -19,7 +19,7 @@ RUN apt-get update -y \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
-COPY --from=builder /app/target/release/portalz-integrator api
+COPY --from=builder /app/target/release/portalz-integrator portalz-integrator
 COPY configuration configuration
 ENV APP_ENVIRONMENT production
 ENV RUST_LOG info
