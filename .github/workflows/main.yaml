@@ -39,9 +39,8 @@ jobs:
           APPLICATION_NAME=$(echo $APPLICATION_NAME)
           IMAGE_NAME=$(echo portalz-registry-dev/$APPLICATION_NAME)
           BRANCH=${GITHUB_REF##*/}
-          TS=$(date +%s)
           REVISION=${GITHUB_SHA::8}
-          BUILD_ID="${BRANCH}-${REVISION}-${TS}"
+          BUILD_ID="${BRANCH}-${REVISION}"
           LATEST_ID=canary
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             BUILD_ID=${GITHUB_REF/refs\/tags\//}
@@ -73,7 +72,7 @@ jobs:
         run: |
           echo "APPLICATION_NAME=$(echo $APPLICATION_NAME)" >> $GITHUB_ENV
           echo "Application name: $APPLICATION_NAME"
-          echo "TAG='${GITHUB_REF##*/}-${GITHUB_SHA::8}-$(date +%s)'" >> $GITHUB_ENV
+          echo "TAG='${GITHUB_REF##*/}-${GITHUB_SHA::8}'" >> $GITHUB_ENV
           echo "Build: $TAG"
       - name: Deploy image to Kubernetes cluster via SSH
         uses: appleboy/ssh-action@master
