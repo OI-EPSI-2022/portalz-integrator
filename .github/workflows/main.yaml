@@ -72,7 +72,7 @@ jobs:
         run: |
           echo "APPLICATION_NAME=$(echo $APPLICATION_NAME)" >> $GITHUB_ENV
           echo "Application name: $APPLICATION_NAME"
-          echo "TAG='${GITHUB_REF##*/}-${GITHUB_SHA::8}'" >> $GITHUB_ENV
+          echo "TAG=${GITHUB_REF##*/}-${GITHUB_SHA::8}" >> $GITHUB_ENV
           echo "Build: $TAG"
       - name: Deploy image to Kubernetes cluster via SSH
         uses: appleboy/ssh-action@master
