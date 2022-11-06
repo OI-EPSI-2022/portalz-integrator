@@ -1,5 +1,6 @@
 use std::time::Instant;
 use amiquip::{Connection, ConsumerMessage, ConsumerOptions, QueueDeclareOptions, Result};
+use dotenv::dotenv;
 use crate::configuration::{get_configuration};
 use secrecy::{ExposeSecret};
 use log::{error, info};
@@ -7,6 +8,8 @@ use log::{error, info};
 mod configuration;
 
 fn main() -> Result<()> {
+    dotenv().ok();
+
     env_logger::init();
     // Open connection.
     let configuration = get_configuration().expect("Failed to read configuration.");

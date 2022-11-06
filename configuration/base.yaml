@@ -1,7 +1,2 @@
 rabbitmq:
   protocol: amqps
-  host: ${APP_RABBITMQ_HOST}
-  port: ${APP_RABBITMQ_PORT}
-  auth:
-    username: ${APP_RABBITMQ_AUTH_USERNAME}
-    password: ${APP_RABBITMQ_AUTH_PASSWORD}

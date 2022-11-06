@@ -1,4 +1,4 @@
 /target
-./.idea
+.idea
 ./configuration/local.yaml
 ./configuration/production.yaml
