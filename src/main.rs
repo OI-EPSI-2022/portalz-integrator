@@ -4,8 +4,11 @@ use dotenv::dotenv;
 use crate::configuration::{get_configuration};
 use secrecy::{ExposeSecret};
 use log::{error, info};
+use crate::models::ApiDeclaration;
+use serde::{Deserialize, Serialize};
 
 mod configuration;
+mod models;
 
 fn main() -> Result<()> {
     dotenv().ok();
@@ -36,19 +39,24 @@ fn main() -> Result<()> {
     info!("Connected to queue {} in {:?}", configuration.rabbitmq.host, start_connection.elapsed());
     info!("Waiting for messages. Press Ctrl-C to exit.");
 
-    for (i, message) in consumer.receiver().iter().enumerate() {
+    for message in consumer.receiver().iter() {
         match message {
-            ConsumerMessage::Delivery(delivery) => {
-                let body = String::from_utf8_lossy(&delivery.body);
-                info!("({:>3}) Received [{}]", i, body);
-                consumer.ack(delivery)?;
-            }
-            other => {
-                error!("Consumer ended: {:?}", other);
-                break;
-            }
+            ConsumerMessage::Delivery(delivery) => handle_message(delivery, &consumer)?,
+            other => error!("Unexpected message: {:?}", other),
         }
     }
 
     connection.close()
+}
+
+fn handle_message(delivery: amiquip::Delivery, consumer: &amiquip::Consumer) -> Result<()> {
+    let api_declaration: Result<ApiDeclaration, _> = serde_json::from_slice(&delivery.body);
+    match api_declaration {
+        Ok(declaration) => {
+            info!("Received message: {:?}", declaration);
+        }
+        Err(e) => error!("Error while parsing message: {}", e)
+    }
+    consumer.ack(delivery)?;
+    Ok(())
 }
