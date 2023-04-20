@@ -5,6 +5,8 @@ use serde_aux::field_attributes::deserialize_number_from_string;
 #[derive(serde::Deserialize, Clone)]
 pub struct Settings {
     pub rabbitmq: RabbitMQSettings,
+    pub database: DatabaseSettings,
+    pub github: GithubSettings,
 }
 
 #[derive(serde::Deserialize, Clone)]
@@ -20,6 +22,20 @@ pub struct RabbitMQSettings {
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub port: u16,
     pub auth: AuthSettings
+}
+
+#[derive(serde::Deserialize, Clone)]
+pub struct DatabaseSettings {
+    pub auth: AuthSettings,
+    #[serde(deserialize_with = "deserialize_number_from_string")]
+    pub port: u16,
+    pub host: String,
+    pub name: String,
+}
+
+#[derive(serde::Deserialize, Clone)]
+pub struct GithubSettings {
+    pub token: Secret<String>,
 }
 
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {
