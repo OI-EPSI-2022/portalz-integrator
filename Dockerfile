@@ -12,7 +12,7 @@ RUN cargo chef cook --release --recipe-path recipe.json
 COPY . .
 RUN cargo build --release --bin portalz-integrator
 
-FROM debian:bullseye-slim AS runtime
+FROM --platform=linux/amd64 debian:bullseye-slim AS runtime
 WORKDIR /app
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends openssl ca-certificates \

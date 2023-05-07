@@ -42,3 +42,16 @@ pub struct RangeConstraints<T> {
     min_range: Option<T>,
     max_range: Option<T>,
 }
+
+#[derive(serde::Deserialize, serde::Serialize, Clone, Debug)]
+pub struct WorkflowParameters {
+    #[serde(rename = "ref")]
+    pub reference: String,
+    pub inputs: WorkflowInputs,
+}
+
+#[derive(serde::Deserialize, serde::Serialize, Clone, Debug)]
+pub struct WorkflowInputs {
+    pub specs_file: String,
+    pub id: String,
+}
