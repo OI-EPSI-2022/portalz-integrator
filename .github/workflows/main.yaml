@@ -57,7 +57,7 @@ jobs:
     name: Deploy on Kubernetes via SSH
     runs-on: ubuntu-latest
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
-    needs: [ build-and-test, docker ]
+    needs: [ build_and_push ]
     steps:
       - name: Set environment variables
         run: |
